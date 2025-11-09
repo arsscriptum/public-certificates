@@ -7,10 +7,10 @@
 #║   Code licensed under the GNU GPL v3.0. See the LICENSE file for details.      ║
 #╚════════════════════════════════════════════════════════════════════════════════╝
 
-$Script:privPath = "C:\www\public-certificates\arsscriptum-bmwtools.pfx"
-$Script:certPath = "C:\www\public-certificates\arsscriptum-bmwtools.cer"
-$Script:DebugLibPath = "C:\Users\guillaumep\Documents\PowerShell\Module-Development\PowerShell.Module.PackageDownloader\cs\bin\Debug\net6.0\PsProtectedModule.dll"
-$Script:ReleaseLibPath = "C:\Users\guillaumep\Documents\PowerShell\Module-Development\PowerShell.Module.PackageDownloader\cs\bin\Debug\net6.0\PsProtectedModule.dll"
+$Script:privPath = Join-Path "$($PWD.Path)" "arsscriptum-bmwtools.pfx"
+$Script:certPath = Join-Path "$($PWD.Path)" "arsscriptum-bmwtools.cer"
+$Script:DebugLibPath =  Join-Path "$env:moddev" "PowerShell.Module.PackageDownloader\cs\bin\Debug\net6.0\PsProtectedModule.dll"
+$Script:ReleaseLibPath = Join-Path "$env:moddev" "PowerShell.Module.PackageDownloader\cs\bin\Debug\net6.0\PsProtectedModule.dll"
 
 
 function Initialize-MyCertificate {
