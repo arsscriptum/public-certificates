@@ -3,7 +3,7 @@
 #===============================================================================
 
 class SignatureProperties {
-    [string]$ValidCertificate = '6B4CF957BD8C08AE7628DC976D903ECE578C175F'
+    [string]$ValidCertificate = '26AA704A5FFE713ABE1B482591F4EDCCB96574E1'
 }
 
 function Get-LocalSigningCert {
