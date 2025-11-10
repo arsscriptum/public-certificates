@@ -6,9 +6,9 @@
 #║   Guillaume Plante <codegp@icloud.com>                                         ║
 #║   Code licensed under the GNU GPL v3.0. See the LICENSE file for details.      ║
 #╚════════════════════════════════════════════════════════════════════════════════╝
-$Script:privPath = Join-Path "$($PWD.Path)" "devcodesign.pfx"
-$Script:certPath = Join-Path "$($PWD.Path)" "devcodesign.cer"
-$Script:certRootPath = Join-Path "$($PWD.Path)"
+$Global:devcodesignPriv = Join-Path "$($PWD.Path)" "devcodesign.pfx"
+$Global:devcodesignCer = Join-Path "$($PWD.Path)" "devcodesign.cer"
+$Global:devcodesignDestPath =  Join-Path "$($PWD.Path)" "raw"
 
 <# =====================================================================
    Self-Signed Code Signing Certificate Toolkit
@@ -18,11 +18,11 @@ $Script:certRootPath = Join-Path "$($PWD.Path)"
    - Imports CER to LocalMachine\Root and LocalMachine\TrustedPublisher
 
    USAGE EXAMPLE (Dev machine):
-     $cert = New-DevCodeSigningCert -Subject "CN=Guillaume Plante (Dev Code Signing)" -Years 3 -OutDir "$Script:certRootPath"
-     Export-DevCodeSigningCert -Certificate $cert -OutDir "$Script:certRootPath" -PfxPassword "StrongP@ssw0rd!"
+     $cert = New-DevCodeSigningCert -Subject "CN=Guillaume Plante (Dev Code Signing)" -Years 3 -OutDir "$Global:devcodesignDestPath"
+     Export-DevCodeSigningCert -Certificate $cert -OutDir "$Global:devcodesignDestPath" -PfxPassword "$Password"
 
    USAGE EXAMPLE (Target machine, as Administrator):
-     Import-DevCodeSigningCertOnLocalMachine -CerPath "C:\Certs\devcodesign.cer"
+     Import-DevCodeSigningCertOnLocalMachine -CerPath "C:\www\public-certificates\raw\devcodesign.cer"
 
    NOTE:
      - Import to LocalMachine requires Admin.
@@ -62,7 +62,6 @@ function Test-IsAdmin {
 # Create self-signed code-signing cert
 #-------------------------------#
 function New-DevCodeSigningCert {
-[OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2])]
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [Parameter(Mandatory=$True, Position=0, HelpMessage="Subject")]
@@ -100,6 +99,7 @@ param(
                 -KeyLength $KeyLength `
                 -HashAlgorithm SHA256 `
                 -KeyExportPolicy Exportable `
+                -FriendlyName "Personal Dev Code Sign" `
                 -NotAfter $notAfter
 
             if (-not $cert) { throw "New-SelfSignedCertificate returned null." }
@@ -234,7 +234,7 @@ param(
     Write-Info "=== Listing Code Signing certs in CurrentUser\My ==="
     Get-ChildItem Cert:\CurrentUser\My |
         Where-Object { $_.EnhancedKeyUsageList.FriendlyName -match "Code Signing" -and $_.Subject -like "*$SubjectFilter*" } |
-        Select-Object Subject, Thumbprint, NotAfter |
+        Select-Object Subject, Thumbprint, NotAfter, PSParentPath |
         Format-Table -AutoSize
 }
 

@@ -1,2 +1,4 @@
 *.pfx
 *.cer
+raw
+raw/**
