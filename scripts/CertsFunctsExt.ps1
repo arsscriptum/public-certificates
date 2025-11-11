@@ -6,9 +6,10 @@
 #║   Guillaume Plante <codegp@icloud.com>                                         ║
 #║   Code licensed under the GNU GPL v3.0. See the LICENSE file for details.      ║
 #╚════════════════════════════════════════════════════════════════════════════════╝
-$Global:devcodesignPriv = Join-Path "$($PWD.Path)" "devcodesign.pfx"
-$Global:devcodesignCer = Join-Path "$($PWD.Path)" "devcodesign.cer"
-$Global:devcodesignDestPath =  Join-Path "$($PWD.Path)" "raw"
+$Global:devcodesignDestPath =  Join-Path "C:\www\public-certificates" "devcodesign"
+$Global:devcodesignPriv = Join-Path "$Global:devcodesignDestPath" "devcodesign.pfx"
+$Global:devcodesignCer = Join-Path "$Global:devcodesignDestPath" "devcodesign.cer"
+
 
 <# =====================================================================
    Self-Signed Code Signing Certificate Toolkit
