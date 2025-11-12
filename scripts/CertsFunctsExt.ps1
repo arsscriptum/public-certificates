@@ -254,7 +254,7 @@ Export-DevCodeSigningCert -Certificate $cert -OutDir "C:\Certs" -PfxPassword "St
 On each target machine (as Administrator):
 Import-DevCodeSigningCertOnLocalMachine -CerPath "C:\Certs\devcodesign.cer"
 # or skip TrustedPublisher if your policy only uses Root:
-# Import-DevCodeSigningCertOnLocalMachine -CerPath "C:\Certs\devcodesign.cer" -SkipTrustedPublisher
+# Import-DevCodeSigningCertOnLocalMachine -CerPath "$Global:devcodesignCer" -SkipTrustedPublisher
 
 
 #>
