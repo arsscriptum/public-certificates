@@ -6,7 +6,7 @@
 #║   Guillaume Plante <codegp@icloud.com>                                         ║
 #║   Code licensed under the GNU GPL v3.0. See the LICENSE file for details.      ║
 #╚════════════════════════════════════════════════════════════════════════════════╝
-$Global:devcodesignDestPath =  Join-Path "C:\www\public-certificates" "devcodesign"
+$Global:devcodesignDestPath =  Join-Path "C:\www\public-certificates" "devcodesign2"
 $Global:devcodesignPriv = Join-Path "$Global:devcodesignDestPath" "devcodesign.pfx"
 $Global:devcodesignCer = Join-Path "$Global:devcodesignDestPath" "devcodesign.cer"
 
@@ -205,13 +205,13 @@ param(
         $pubStore  = "Cert:\LocalMachine\TrustedPublisher"
 
         if ($PSCmdlet.ShouldProcess($rootStore, "Import to Trusted Root")) {
-            $r = Import-Certificate -FilePath $CerPath -CertStoreLocation $rootStore
+            $r = Import-Certificate -FilePath $CerPath  -Location 'LocalMachine' -StoreName 'Root'
             if ($r) { Write-Good "Imported into Trusted Root Certification Authorities." }
         }
 
         if (-not $SkipTrustedPublisher) {
             if ($PSCmdlet.ShouldProcess($pubStore, "Import to Trusted Publishers")) {
-                $p = Import-Certificate -FilePath $CerPath -CertStoreLocation $pubStore
+                $p = Import-Certificate -FilePath $CerPath  -Location 'LocalMachine' -StoreName 'TrustedPublisher'
                 if ($p) { Write-Good "Imported into Trusted Publishers." }
             }
         } else {
@@ -230,13 +230,11 @@ function Show-DevCodeSigningCert {
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$False, HelpMessage="SubjectFilter")]
-    [string]$SubjectFilter = "Code Signing"
+    [string]$SubjectFilter = "Guillaume Plante"
 )
     Write-Info "=== Listing Code Signing certs in CurrentUser\My ==="
     Get-ChildItem Cert:\CurrentUser\My |
-        Where-Object { $_.EnhancedKeyUsageList.FriendlyName -match "Code Signing" -and $_.Subject -like "*$SubjectFilter*" } |
-        Select-Object Subject, Thumbprint, NotAfter, PSParentPath |
-        Format-Table -AutoSize
+        Where-Object { $_.EnhancedKeyUsageList.FriendlyName -match "Code Signing" -and $_.Subject -like "*$SubjectFilter*" } | Select -Last 1
 }
 
 #-------------------------------#
@@ -247,8 +245,8 @@ param(
 
 <#
 On your dev box (non-admin is fine):
-$cert = New-DevCodeSigningCert -Subject "CN=Guillaume Plante (Dev Code Signing)" -Years 3 -OutDir "C:\Certs"
-Export-DevCodeSigningCert -Certificate $cert -OutDir "C:\Certs" -PfxPassword "StrongP@ssw0rd!"
+$cert = New-DevCodeSigningCert -Subject "CN=Guillaume Plante SignerCert" -Years 3 -OutDir "$Global:devcodesignDestPath"
+Export-DevCodeSigningCert -Certificate $cert -OutDir "$Global:devcodesignDestPath" -PfxPassword "SecretTest23_"
 
 
 On each target machine (as Administrator):

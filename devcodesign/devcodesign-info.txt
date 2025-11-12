@@ -1,6 +1,0 @@
-Subject    : CN=Guillaume Plante (Dev Code Signing)
-Thumbprint : A03D6170FAB6E2879B9D134A16654EA5199F7F4D
-Issuer     : CN=Guillaume Plante (Dev Code Signing)
-NotBefore  : 11/11/2025 11:25:45
-NotAfter   : 11/11/2028 11:35:44
-Store      : Cert:\CurrentUser\My
